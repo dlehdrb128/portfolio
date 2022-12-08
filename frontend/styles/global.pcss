@@ -2,8 +2,21 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+    /* ... */
+
+    body::-webkit-scrollbar {
+        display: none;
+    }
+
+    body {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+}
+
 @layer utilities {
-    .scrollbar::-webkit-scrollbar {
+    /* .scrollbar::-webkit-scrollbar {
         width: 20px;
         height: 20px;
     }
@@ -21,5 +34,13 @@
 
     .scrollbar::-webkit-scrollbar-thumb:hover {
         background: white;
+    } */
+
+    .scrollbar {
+        -ms-overflow-style: none; /* IE and Edge */
+        scrollbar-width: none; /* Firefox */
+    }
+    .scrollbar::-webkit-scrollbar {
+        display: none; /* Chrome, Safari, Opera*/
     }
 }
