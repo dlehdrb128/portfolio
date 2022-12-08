@@ -18,12 +18,18 @@ app.get("/", (req: Request, res: Response) => {
 });
 
 app.get("/playlists", (req: Request, res: Response) => {
+    console.log(req.query);
+
     axios
         .get(
-            `playlists?key=${key}&channelId=UCDqaUIUSJP5EVMEI178Zfag&part=snippet&maxResults=25`
+            `playlists?key=${key}&channelId=UCDqaUIUSJP5EVMEI178Zfag&part=snippet&maxResults=${
+                req.query.maxResults ? req.query.maxResults : "10"
+            }&pageToken=${
+                req.query.nextPageToken ? req.query.nextPageToken : ""
+            }`
         )
         .then((value) => {
-            res.status(200).json(value.data);
+            return res.status(200).json(value.data);
         })
         .catch((e) => {
             res.status(400).json({

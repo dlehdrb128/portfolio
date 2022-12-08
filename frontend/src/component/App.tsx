@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef, useCallback } from "react";
 import axios, { AxiosResponse } from "axios";
 import "../../styles/global.pcss";
+import { AiOutlineBell } from "react-icons/ai";
 
 interface playlist {
     etag?: string;
@@ -37,6 +38,10 @@ interface Snippet {
 }
 
 const App = () => {
+    const loging = useRef(null);
+    const [maxResults, setMaxResults] = useState(10);
+    const [page, setPage] = useState(1);
+
     const [playlists, setPlaylists] = useState<playlist>({
         etag: "",
         items: [],
@@ -47,31 +52,65 @@ const App = () => {
             totalResults: "",
         },
     });
-
-    useEffect(() => {
-        try {
-            axios
-                .get<playlist>("http://localhost:8080/playlists")
-                .then((value) => {
-                    console.log(value);
-                    setPlaylists(value.data);
-                });
-        } catch (error) {
-            if (error) {
-                console.error(error);
-            }
+    const intersectHandler = useCallback(([entry]: any) => {
+        if (entry.isIntersecting) {
+            setPage((page) => page + 1);
         }
     }, []);
 
-    {
-        console.log(playlists.items);
-    }
+    useEffect(() => {
+        const getData = async () => {
+            try {
+                const value = await axios.get<playlist>(
+                    `http://localhost:8080/playlists?maxResults=${maxResults}&nextPageToken=${playlists.nextPageToken}`
+                );
+
+                setPlaylists((prev) => {
+                    let data: any = [];
+
+                    // console.log(prev);
+                    // console.log(value.data);
+                    value.data.items.forEach((el) => {
+                        data.push(el.snippet);
+                    });
+
+                    const newObject = {
+                        ...value.data,
+                        items: [...prev.items, ...value.data.items],
+                    };
+
+                    // value.data.item: total
+
+                    return newObject;
+                });
+            } catch (error) {
+                if (error) {
+                    console.error(error);
+                }
+            }
+        };
+        getData();
+    }, [page]);
+
+    // useEffect(() => {
+    //     const observer = new IntersectionObserver(intersectHandler, {
+    //         threshold: 0,
+    //     });
+
+    //     observer.observe(loging.current);
+
+    //     return () => observer.disconnect();
+    // }, [intersectHandler]);
 
     return (
         <>
-            <div className="w-screen h-screen overflow-hidden bg-gray-100 flex flex-col items-center">
-                <div>gaaaaaaa</div>
-                <div className="max-w-md overflow-y-scroll flex flex-col scrollbar">
+            <div className="bg-gray-100 flex flex-col items-center justify-center">
+                <div className="w-[420px] flex flex-col bg-white">
+                    <div className="flex justify-between items-center bg-black text-white h-16 px-4">
+                        <p className="cursor-pointer">질러 노래방</p>
+                        <AiOutlineBell className="cursor-pointer" size="24" />
+                    </div>
+
                     {/* <iframe
                         id="ytplayer"
                         width="500"
@@ -79,18 +118,34 @@ const App = () => {
                         src="https://www.youtube.com/embed/M7lc1UVf-VE?autoplay=1&origin=http://example.com"
                     ></iframe> */}
 
-                    {playlists.items.map((el: Snippet) => {
-                        console.log(el.snippet);
-                        return (
-                            <div key={el.id}>
-                                <img
-                                    src={`${el.snippet.thumbnails.medium.url}`}
-                                    alt="이미지"
-                                />
-                                <p>{el.snippet.title}</p>
-                            </div>
-                        );
-                    })}
+                    <div className="flex flex-col items-center justify-center">
+                        {playlists.items.map((el: Snippet, i) => {
+                            return (
+                                <div key={i}>
+                                    <img
+                                        src={`${el.snippet.thumbnails.medium.url}`}
+                                        alt="이미지"
+                                    />
+                                    <p>{el.snippet.title}</p>
+                                </div>
+                            );
+                        })}
+                    </div>
+
+                    <div
+                        style={{
+                            display: playlists.items.length === 0 && "none",
+                        }}
+                        ref={loging}
+                    >
+                        로딩 중 입니다.
+                    </div>
+                </div>
+
+                <div className="fixed bottom-0 w-[420px] flex items-center justify-between bg-black h-16 px-4">
+                    <div className="text-white">홈</div>
+                    <div className="text-white">간지</div>
+                    <div className="text-white">전체</div>
                 </div>
             </div>
         </>
