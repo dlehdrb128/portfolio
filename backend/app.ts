@@ -22,7 +22,7 @@ app.get('/playlists', (req: Request, res: Response) => {
 
   axios
     .get(
-      `playlists?key=${key}&channelId=UCDqaUIUSJP5EVMEI178Zfag&part=snippet&maxResults=${
+      `playlists?key=${key}&channelId=UCDqaUIUSJP5EVMEI178Zfag&part=snippet,status,contentDetails&maxResults=${
         req.query.maxResults ? req.query.maxResults : '10'
       }&pageToken=${req.query.nextPageToken ? req.query.nextPageToken : ''}`
     )

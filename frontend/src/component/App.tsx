@@ -1,7 +1,9 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react';
 import axios, { AxiosResponse } from 'axios';
 import '../../styles/global.pcss';
-import { AiOutlineBell } from 'react-icons/ai';
+import { AiOutlineBell, AiOutlineHome } from 'react-icons/ai';
+import { MdOutlineMessage } from 'react-icons/md';
+import { Outlet } from 'react-router-dom';
 
 interface playlist {
   etag?: string;
@@ -18,6 +20,9 @@ interface Snippet {
   kind: string;
   etag: string;
   id: string;
+  contentDetails?: {
+    itemCount: string;
+  };
   snippet: {
     channelId: string;
     channelTitle: string;
@@ -41,7 +46,6 @@ const App = () => {
   const loging = useRef(null);
   const [maxResults, setMaxResults] = useState(10);
   const [page, setPage] = useState(1);
-
   const [playlists, setPlaylists] = useState<playlist>({
     etag: '',
     items: [],
@@ -92,60 +96,69 @@ const App = () => {
     getData();
   }, [page]);
 
-  // useEffect(() => {
-  //     const observer = new IntersectionObserver(intersectHandler, {
-  //         threshold: 0,
-  //     });
+  useEffect(() => {
+    const observer = new IntersectionObserver(intersectHandler, {
+      threshold: 0,
+    });
 
-  //     observer.observe(loging.current);
+    observer.observe(loging.current);
 
-  //     return () => observer.disconnect();
-  // }, [intersectHandler]);
+    return () => observer.disconnect();
+  }, [intersectHandler]);
 
   return (
     <>
       <div className='bg-gray-100 flex flex-col items-center justify-center'>
-        <div className='w-[420px] flex flex-col bg-white'>
+        <div className='flex flex-col bg-white'>
           <div className='flex justify-between items-center bg-black text-white h-16 px-4'>
             <p className='cursor-pointer'>질러 노래방</p>
             <AiOutlineBell className='cursor-pointer' size='24' />
           </div>
 
-          {/* <iframe
-                        id="ytplayer"
-                        width="500"
-                        height="250"
-                        src="https://www.youtube.com/embed/M7lc1UVf-VE?autoplay=1&origin=http://example.com"
-                    ></iframe> */}
-
-          <div className='flex flex-col items-center justify-center'>
+          <div className='flex flex-col items-center p-4'>
             {playlists.items.map((el: Snippet, i) => {
               return (
-                <div key={i}>
+                <div className='w-[320px]' key={i}>
                   <img
+                    className='min-w-full'
                     src={`${el.snippet.thumbnails.medium.url}`}
                     alt='이미지'
                   />
-                  <p>{el.snippet.title}</p>
+                  <div>
+                    <p>{el.snippet.title}</p>
+                    <p>{el.contentDetails.itemCount} 영상 개수</p>
+                  </div>
                 </div>
               );
             })}
-          </div>
 
-          <div
-            style={{
-              display: playlists.items.length === 0 && 'none',
-            }}
-            ref={loging}
-          >
-            로딩 중 입니다.
+            <div
+              className='text-white'
+              style={{
+                display: playlists.items.length === 0 && 'none',
+              }}
+              ref={loging}
+            >
+              로딩 중 입니다.
+            </div>
           </div>
+          <Outlet />
         </div>
 
-        <div className='fixed bottom-0 w-[420px] flex items-center justify-between bg-black h-16 px-4'>
-          <div className='text-white'>홈</div>
-          <div className='text-white'>간지</div>
-          <div className='text-white'>전체</div>
+        <div className='flex items-center justify-around fixed bottom-0 w-[352px] bg-black h-16 px-4'>
+          <button className='text-white flex items-center justify-center'>
+            <div className='text-white flex items-center justify-center flex-col'>
+              <AiOutlineHome size={'28'} />
+              <p>홈</p>
+            </div>
+          </button>
+
+          <button className='text-white flex items-center justify-center'>
+            <div className='text-white flex items-center justify-center flex-col'>
+              <MdOutlineMessage size={'28'} />
+              <p>연락처</p>
+            </div>
+          </button>
         </div>
       </div>
     </>
