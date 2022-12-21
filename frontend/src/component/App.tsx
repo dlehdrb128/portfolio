@@ -119,15 +119,21 @@ const App = () => {
             {playlists.items.map((el: Snippet, i) => {
               return (
                 <div className='w-[320px]' key={i}>
-                  <img
-                    className='min-w-full'
-                    src={`${el.snippet.thumbnails.medium.url}`}
-                    alt='이미지'
-                  />
-                  <div>
+                  <div
+                    className='cursor-pointer'
+                    onClick={() => {
+                      console.log('클릭하기');
+                    }}
+                  >
+                    <img
+                      className='min-w-full'
+                      src={`${el.snippet.thumbnails.medium.url}`}
+                      alt='이미지'
+                    />
                     <p>{el.snippet.title}</p>
-                    <p>{el.contentDetails.itemCount} 영상 개수</p>
                   </div>
+
+                  <p>{el.contentDetails.itemCount} 영상 개수</p>
                 </div>
               );
             })}
