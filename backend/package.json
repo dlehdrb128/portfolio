@@ -21,8 +21,10 @@
     },
     "dependencies": {
         "@types/cors": "^2.8.13",
+        "@types/morgan": "^1.9.3",
         "axios": "^1.2.1",
         "cors": "^2.8.5",
-        "dotenv": "^16.0.3"
+        "dotenv": "^16.0.3",
+        "morgan": "^1.10.0"
     }
 }
