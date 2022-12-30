@@ -1,11 +1,14 @@
 import React, { useEffect, useState, useRef, useCallback } from "react";
 import axios, { AxiosResponse } from "axios";
-import "../../styles/global.pcss";
 import { AiOutlineBell, AiOutlineHome } from "react-icons/ai";
 import { MdOutlineMessage } from "react-icons/md";
 import { Outlet } from "react-router-dom";
+import Footer from "../page/Footer";
+import Header from "../page/Header";
 
-interface playlist {
+// import Content from "../component/Content";
+
+export interface playlist {
     etag?: string;
     items?: Snippet[];
     kind?: string;
@@ -16,7 +19,7 @@ interface playlist {
     };
 }
 
-interface Snippet {
+export interface Snippet {
     kind: string;
     etag: string;
     id: string;
@@ -47,7 +50,6 @@ const App = () => {
     const loging = useRef<any>(null);
     const [maxResults, setMaxResults] = useState(10);
     const [page, setPage] = useState(1);
-    const [color, setColor] = useState<string>("decoration-black");
     const [playlists, setPlaylists] = useState<playlist>({
         etag: "",
         items: [],
@@ -79,7 +81,6 @@ const App = () => {
                     if (value.data.items) {
                         value.data.items.forEach((el: Snippet) => {
                             data.push(el.snippet);
-                            console.log(el);
                         });
                         const newObject = {
                             ...value.data,
@@ -115,13 +116,15 @@ const App = () => {
         <>
             <div className="bg-gray-100 flex flex-col items-center justify-center">
                 <div className="flex flex-col bg-white">
-                    <div className="flex justify-between items-center bg-black text-white h-16 px-4">
-                        <p className="cursor-pointer">질러 노래방</p>
-                        <AiOutlineBell className="cursor-pointer" size="24" />
-                    </div>
-
-                    <div className="flex flex-col items-center p-4">
-                        {playlists.items?.map((el: Snippet, i: number) => {
+                    {playlists.items?.length !== 0 && (
+                        <>
+                            <Header />
+                            <Outlet context={{ playlists }} />
+                            <Footer />
+                        </>
+                    )}
+                    {/* <div className="flex flex-col items-center p-4"> */}
+                    {/* {playlists.items?.map((el: Snippet, i: number) => {
                             return (
                                 <div className="w-[320px]" key={i}>
                                     <div
@@ -145,36 +148,16 @@ const App = () => {
                                     </p>
                                 </div>
                             );
-                        })}
+                        })} */}
 
-                        <div
-                            className={
-                                playlists.items?.length === 0
-                                    ? "hidden"
-                                    : "block"
-                            }
-                            ref={loging}
-                        >
-                            로딩 중 입니다.
-                        </div>
+                    <div
+                        className={
+                            playlists.items?.length === 0 ? "hidden" : "block"
+                        }
+                        ref={loging}
+                    >
+                        로딩 중 입니다.
                     </div>
-                    <Outlet />
-                </div>
-
-                <div className="flex items-center justify-around fixed bottom-0 w-[352px] bg-black h-16 px-4">
-                    <button className="text-white flex items-center justify-center">
-                        <div className="text-white flex items-center justify-center flex-col">
-                            <AiOutlineHome size={"28"} />
-                            <p>홈</p>
-                        </div>
-                    </button>
-
-                    <button className="text-white flex items-center justify-center">
-                        <div className="text-white flex items-center justify-center flex-col">
-                            <MdOutlineMessage size={"28"} />
-                            <p>연락처</p>
-                        </div>
-                    </button>
                 </div>
             </div>
         </>
