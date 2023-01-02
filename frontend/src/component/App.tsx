@@ -70,7 +70,7 @@ const App = () => {
         const getData = async () => {
             try {
                 const value = await axios.get<playlist>(
-                    `http://localhost:8080/playlists?maxResults=${maxResults}&nextPageToken=${playlists.nextPageToken}`
+                    `playlists?maxResults=${maxResults}&nextPageToken=${playlists.nextPageToken}`
                 );
 
                 setPlaylists((prev: any) => {
