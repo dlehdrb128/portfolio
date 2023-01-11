@@ -1,10 +1,14 @@
-import React, { useEffect, useState, useRef, useCallback } from 'react';
-import axios, { AxiosResponse } from 'axios';
-import { AiOutlineBell, AiOutlineHome } from 'react-icons/ai';
-import { MdOutlineMessage } from 'react-icons/md';
-import { Outlet } from 'react-router-dom';
-import Footer from '../page/Footer';
-import Header from '../page/Header';
+import React, {
+  useEffect,
+  useState,
+  useRef,
+  useCallback,
+  useMemo,
+} from "react";
+import axios, { AxiosResponse } from "axios";
+import { Outlet } from "react-router-dom";
+import Footer from "../page/Footer";
+import Header from "../page/Header";
 
 // import Content from "../component/Content";
 
@@ -51,13 +55,13 @@ const App = () => {
   const [maxResults, setMaxResults] = useState(10);
   const [page, setPage] = useState(1);
   const [playlists, setPlaylists] = useState<playlist>({
-    etag: '',
+    etag: "",
     items: [],
-    kind: '',
-    nextPageToken: '',
+    kind: "",
+    nextPageToken: "",
     pageInfo: {
-      resultsPerPage: '',
-      totalResults: '',
+      resultsPerPage: "",
+      totalResults: "",
     },
   });
   const intersectHandler = useCallback(([entry]: any) => {
@@ -112,22 +116,23 @@ const App = () => {
     return () => observer.disconnect();
   }, [intersectHandler]);
 
+  const outlet = useMemo(() => <Outlet context={{ playlists }} />, [playlists]);
+
   return (
     <>
-      <div className='bg-gray-100 flex flex-col items-center justify-center'>
-        <div className='flex flex-col bg-white'>
+      <div className="bg-gray-100 flex flex-col items-center justify-center">
+        <div className="flex flex-col bg-white w-full">
           {playlists.items?.length !== 0 && (
             <>
               <Header />
-              <Outlet context={{ playlists }} />
+              {outlet}
               <Footer />
             </>
           )}
 
           <div
-            className={playlists.items?.length === 0 ? 'hidden' : 'block'}
-            ref={loging}
-          >
+            className={playlists.items?.length === 0 ? "hidden" : "block"}
+            ref={loging}>
             로딩 중 입니다.
           </div>
         </div>

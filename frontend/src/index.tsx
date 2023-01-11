@@ -12,7 +12,7 @@ const container = document.getElementById("root");
 const root = ReactDOM.createRoot(container as Element);
 
 root.render(
-    <BrowserRouter>
-        <Router />
-    </BrowserRouter>
+  <BrowserRouter>
+    <Router />
+  </BrowserRouter>
 );

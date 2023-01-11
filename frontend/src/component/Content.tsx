@@ -1,6 +1,6 @@
-import React, { useCallback } from 'react';
-import { useOutletContext, useNavigate } from 'react-router-dom';
-import { Snippet, playlist } from './App';
+import React, { useCallback } from "react";
+import { useOutletContext, useNavigate } from "react-router-dom";
+import { Snippet, playlist } from "./App";
 
 const Content = () => {
   const { playlists } = useOutletContext<{
@@ -9,20 +9,19 @@ const Content = () => {
   let navigate = useNavigate();
 
   const onClickHandler = useCallback((data: Snippet) => {
-    console.log(data);
-    navigate('/playList');
+    navigate(`/playlistItems?playlistId=${data.id}`);
   }, []);
 
   return (
-    <div className='flex flex-col items-center p-4'>
+    <div className="flex flex-col items-center p-4">
       {playlists.items?.map((el: Snippet, i: number) => {
         return (
-          <div className='w-[320px]' key={i}>
-            <div className='cursor-pointer' onClick={() => onClickHandler(el)}>
+          <div className="w-[320px]" key={el.id}>
+            <div className="cursor-pointer" onClick={() => onClickHandler(el)}>
               <img
-                className='min-w-full'
-                src={`${el.snippet.thumbnails.medium.url}`}
-                alt='이미지'
+                className="min-w-full"
+                src={`${el.snippet.thumbnails.high.url}`}
+                alt="이미지"
               />
               <p>{el.snippet.title}</p>
             </div>
