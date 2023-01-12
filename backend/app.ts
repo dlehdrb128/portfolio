@@ -39,13 +39,19 @@ app.get("/playlists", (req: Request, res: Response) => {
 });
 
 app.get("/playlistItems", (req: Request, res: Response) => {
-  const { playlistId } = req.query;
+  const { playlistId, nextPageToken, maxResults } = req.query;
+
+  console.log(req.query.playlistId, "흥!");
 
   axios
     .get(
-      `playlistItems?key=${key}&part=snippet&playlistId=${playlistId}&maxResults=10`
+      `playlistItems?key=${key}&part=snippet&playlistId=${playlistId}&maxResults=${
+        maxResults ? maxResults : "10"
+      }&pageToken=${nextPageToken ? nextPageToken : ""}`
     )
     .then((value) => {
+      console.log(value, "안녕");
+
       return res.status(200).json(value.data);
     })
     .catch((e) => {

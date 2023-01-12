@@ -2,7 +2,7 @@ import React, { useCallback } from "react";
 import { useOutletContext, useNavigate } from "react-router-dom";
 import { Snippet, playlist } from "./App";
 
-const Content = () => {
+const Playlists = () => {
   const { playlists } = useOutletContext<{
     playlists: playlist;
   }>();
@@ -32,4 +32,4 @@ const Content = () => {
     </div>
   );
 };
-export default React.memo(Content);
+export default React.memo(Playlists);

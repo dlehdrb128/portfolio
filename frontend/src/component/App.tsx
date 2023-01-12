@@ -116,7 +116,10 @@ const App = () => {
     return () => observer.disconnect();
   }, [intersectHandler]);
 
-  const outlet = useMemo(() => <Outlet context={{ playlists }} />, [playlists]);
+  const outlet = useMemo(
+    () => <Outlet context={{ playlists, loging }} />,
+    [playlists]
+  );
 
   return (
     <>
